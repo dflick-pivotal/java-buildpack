@@ -28,14 +28,14 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
   context do
 
     before do
-      allow(services).to receive(:one_service?).with(/dynatrace/, 'apitoken', 'environmentid').and_return(true)
-      allow(services).to receive(:find_service).and_return('credentials' => { 'environmentid' => 'test-environmentid',
+      allow(services).to receive(:one_service?).with(/dynatrace/, 'apitoken', 'environmentid').with(OpenSSL::SSL::VERIFY_NONE).and_return(true)
+      allow(services).to receive(:find_service).with(OpenSSL::SSL::VERIFY_NONE).and_return('credentials' => { 'environmentid' => 'test-environmentid',
                                                                               'apiurl'        => 'test-apiurl',
                                                                               'apitoken'      => 'test-apitoken' })
 
       allow(application_cache).to receive(:get)
         .with('test-apiurl/v1/deployment/installer/agent/unix/paas/latest?include=java&bitness=64&' \
-        'Api-Token=test-apitoken')
+        'Api-Token=test-apitoken').with(OpenSSL::SSL::VERIFY_NONE)
         .and_yield(Pathname.new('spec/fixtures/stub-dynatrace-one-agent.zip').open, false)
     end
 
@@ -95,13 +95,13 @@ describe JavaBuildpack::Framework::DynatraceOneAgent do
     context do
 
       before do
-        allow(services).to receive(:one_service?).with(/dynatrace/, 'apitoken', 'environmentid').and_return(true)
-        allow(services).to receive(:find_service).and_return('credentials' => { 'environmentid' => 'test-environmentid',
+        allow(services).to receive(:one_service?).with(/dynatrace/, 'apitoken', 'environmentid').with(OpenSSL::SSL::VERIFY_NONE).and_return(true)
+        allow(services).to receive(:find_service).with(OpenSSL::SSL::VERIFY_NONE).and_return('credentials' => { 'environmentid' => 'test-environmentid',
                                                                                 'apiurl'        => 'test-apiurl',
                                                                                 'apitoken'      => 'test-apitoken' })
         allow(application_cache).to receive(:get)
           .with('test-apiurl/v1/deployment/installer/agent/unix/paas/latest?include=java&bitness=64' \
-            '&Api-Token=test-apitoken')
+            '&Api-Token=test-apitoken').with(OpenSSL::SSL::VERIFY_NONE)
           .and_raise(RuntimeError.new('service interrupt'))
       end
 
